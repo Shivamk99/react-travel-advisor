@@ -4,8 +4,28 @@ import Header from "./components/Header/Header";
 import List from "./components/List/List";
 import PlaceDetails from "./components/PlaceDetails/PlaceDetails";
 import Map from "./components/Map/Map";
+import { getPlacesData } from "./api/index";
 
 const App = () => {
+  const [places, setPlaces] = React.useState([]);
+  const [coordinates, setCoordinates] = React.useState({});
+  const [boundary, setBoundary] = React.useState(null);
+
+  React.useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => {
+        setCoordinates({ lat: latitude, lng: longitude });
+      }
+    );
+  }, []);
+
+  React.useEffect(() => {
+    getPlacesData().then((data) => {
+      console.log("data", data);
+      setPlaces(data);
+    });
+  }, [coordinates, boundary]);
+
   return (
     <>
       <CssBaseline />
@@ -15,7 +35,11 @@ const App = () => {
           <List />
         </Grid>
         <Grid item xs={12} md={8}>
-          <Map />
+          <Map
+            coordinates={coordinates}
+            setCoordinates={setCoordinates}
+            setBoundary={setBoundary}
+          />
         </Grid>
       </Grid>
     </>

@@ -4,7 +4,7 @@ import Header from "./components/Header/Header";
 import List from "./components/List/List";
 import PlaceDetails from "./components/PlaceDetails/PlaceDetails";
 import Map from "./components/Map/Map";
-import { getPlacesData } from "./api/index";
+import { getPlacesData, getWeatherData } from "./api/index";
 
 const App = () => {
   const [places, setPlaces] = React.useState([]);
@@ -15,6 +15,7 @@ const App = () => {
   const [loading, setLoading] = React.useState(false);
   const [type, setType] = React.useState("restaurants");
   const [rating, setRating] = React.useState("");
+  const [weatherData, setWeatherData] = React.useState([]);
 
   const [autocomplete, setAutocomplete] = React.useState(null);
   const onLoad = (ac) => setAutocomplete(ac);
@@ -45,6 +46,11 @@ const App = () => {
     if (boundary.sw && boundary.ne) {
       setLoading(true);
       setLoading(true);
+
+      getWeatherData(coordinates.lat, coordinates.lng).then((data) =>
+        setWeatherData(data)
+      );
+
       getPlacesData(type, boundary?.sw, boundary?.ne).then((data) => {
         setPlaces(
           data?.filter((place) => place?.name && place?.num_reviews > 0)
@@ -78,6 +84,7 @@ const App = () => {
             setBoundary={setBoundary}
             places={placeFilter?.length ? placeFilter : places}
             setChildClick={setChildClick}
+            weatherData={weatherData}
           />
         </Grid>
       </Grid>

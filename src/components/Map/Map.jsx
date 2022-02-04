@@ -5,7 +5,13 @@ import { Paper, useMediaQuery, Typography } from "@material-ui/core";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Rating from "@material-ui/lab/Rating";
 
-const Map = ({ coordinates, setCoordinates, setBoundary, places }) => {
+const Map = ({
+  coordinates,
+  setCoordinates,
+  setBoundary,
+  places,
+  setChildClick,
+}) => {
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width:600px)");
 
@@ -22,7 +28,9 @@ const Map = ({ coordinates, setCoordinates, setBoundary, places }) => {
           setCoordinates({ lat: e.center.lat, lng: e.center.lng });
           setBoundary({ ne: e.marginBounds.ne, sw: e.marginBounds.sw });
         }}
-        onChildClick={""}
+        onChildClick={(child) => {
+          setChildClick(child);
+        }}
       >
         {places?.map((place, key) => (
           <div
